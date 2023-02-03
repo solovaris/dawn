@@ -34,18 +34,29 @@ class Fun(commands.Cog):
         pp = "=" * pp_length
         await ctx.send(f"{ctx.author.name}'s peen:\n8{pp}D")
 
-    @commands.command(aliases=["dice"])
+    @commands.command(aliases=["dice"])  # Dice
     async def roll(self, ctx):
         dice_number = random.randint(1, 6)
         await ctx.send(f":game_die: Rolling... **{dice_number}**")
 
-    @commands.command()
+    @commands.command()  # Meme Feed
     async def meme(self, ctx):
         content = get("https://meme-api.com/gimme").text
-        data = json.loads(content, )
+        data = json.loads(content)
         meme = discord.Embed(title=f"{data['title']}", color=discord.Color.random())
         meme.set_image(url=f"{data['url']}")
+        meme.set_footer(text=f'Requested by {ctx.message.author}')
         await ctx.reply(embed=meme)
+
+    @commands.command(aliases=["pfp", "av"])  # User Avatar  NEEDS FIX!!!!
+    async def avatar(self, ctx, *, member: discord.Member = None):
+        if not member:
+            member = ctx.message.author
+        useravatar = member.avatar
+        embed = discord.Embed(title=f"{member}'s Avatar", color=discord.Color.random())
+        embed.set_image(url=f"{useravatar}")
+        embed.set_footer(text=f'Requested by {ctx.message.author}')
+        await ctx.send(embed=embed)
 
 
 async def setup(client):
