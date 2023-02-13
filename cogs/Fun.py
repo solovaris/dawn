@@ -3,6 +3,9 @@ from discord.ext import commands
 import random
 import json
 from requests import get
+import deeppyer
+import io
+from PIL import Image
 
 
 class Fun(commands.Cog):
@@ -13,7 +16,7 @@ class Fun(commands.Cog):
     async def on_ready(self):
         print("Fun commands are ready!")
 
-    @commands.command(aliases=["8ball", "eightball"])  # Magic 8 ball
+    @commands.command(aliases=["8ball", "eightball", "8b"])  # Magic 8 ball
     async def magic8ball(self, ctx, *, question=None):
         if not question:
             await ctx.send(':x: The magic 8 ball needs a question to answer.')
@@ -48,7 +51,7 @@ class Fun(commands.Cog):
         meme.set_footer(text=f'Requested by {ctx.message.author}')
         await ctx.reply(embed=meme)
 
-    @commands.command(aliases=["pfp", "av"])  # User Avatar  NEEDS FIX!!!!
+    @commands.command(aliases=["pfp", "av"])  # User Avatar
     async def avatar(self, ctx, *, member: discord.Member = None):
         if not member:
             member = ctx.message.author
@@ -57,6 +60,30 @@ class Fun(commands.Cog):
         embed.set_image(url=f"{useravatar}")
         embed.set_footer(text=f'Requested by {ctx.message.author}')
         await ctx.send(embed=embed)
+
+    @commands.command()  # Deepfry
+    async def deepfry(self, ctx: commands.Context, *, member: discord.Member = None):
+        if ctx.message.attachments:
+            attachment = ctx.message.attachments[0]
+            avatar = await attachment.read()
+        elif member:
+            avatar = await member.avatar.read()
+        else:
+            member = ctx.message.author
+            avatar = await member.avatar.read()
+
+        _bytes = io.BytesIO()
+        image = Image.open(io.BytesIO(avatar))
+        im = deeppyer.deepfry(image)
+
+        im.save(_bytes, "png")
+        _bytes.seek(0)
+
+        embed = discord.Embed(title="Deepfried image", color=discord.Color.random())
+        file = discord.File(_bytes, "fried.png")
+        embed.set_image(url="attachment://fried.png")
+        embed.set_footer(text=f'Requested by {ctx.message.author}')
+        await ctx.send(file=file, embed=embed)
 
 
 async def setup(client):
