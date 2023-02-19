@@ -1,4 +1,4 @@
-<p align="center"><img src="img/dawnicon.png" width="200" height="200">/p>
+<p align="center"><img src="img/dawnicon.png" width="200" height="200"></p>
 <h1 align="center">dawn</h1>
 <p align="center">embrace tranquility.</p>
 
