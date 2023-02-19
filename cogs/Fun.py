@@ -114,7 +114,7 @@ class Fun(commands.Cog):
                 ":x: Invalid color code! Please provide a valid hexadecimal color code in the format of 0xRRGGBB.")
         else:
             print(error)
-            await ctx.send(''':x: Please try again with correct format: `>embed "<title>" "<message>" "<hex color code>")`''')
+            await ctx.send(''':x: Please try again with correct format: `>embed "<title>" "<message>" <hex color code>)`''')
 
 
 async def setup(client):
