@@ -85,6 +85,37 @@ class Fun(commands.Cog):
         embed.set_footer(text=f'Requested by {ctx.message.author}')
         await ctx.send(file=file, embed=embed)
 
+    @commands.command(aliases=["em"])  # Custom Embed
+    async def embed(self, ctx, title, text="", color="0x000000"):
+        print(f"title: {title}, text: {text}, color: {color}")
+        if not title:
+            await ctx.send(":x: Please provide a title for the embed command!")
+            return
+
+        try:
+            embed_color = int(color, 0)
+        except ValueError:
+            await ctx.send(
+                ":x: Invalid color code! Please provide a valid hexadecimal color code in the format of 0xRRGGBB.")
+            return
+
+        embed = discord.Embed(title=title, color=embed_color)
+        if text:
+            embed.add_field(name=text, value="", inline=False)
+        embed.set_footer(text=f'Requested by {ctx.author}')
+        await ctx.send(embed=embed)
+
+    @embed.error  # Custom Embed error handling
+    async def embed_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send(":x: Please provide an argument for the embed command!")
+        elif isinstance(error, commands.BadArgument):
+            await ctx.send(
+                ":x: Invalid color code! Please provide a valid hexadecimal color code in the format of 0xRRGGBB.")
+        else:
+            print(error)
+            await ctx.send(''':x: Please try again with correct format: `>embed "<title>" "<message>" "<hex color code>")`''')
+
 
 async def setup(client):
     await client.add_cog(Fun(client))
